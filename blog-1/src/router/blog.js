@@ -7,6 +7,7 @@ const {
   updateBlog,
   deleteBlog
 } = require('../controller/blog')
+
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 
 

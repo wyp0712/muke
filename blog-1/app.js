@@ -2,10 +2,6 @@ const handleBlogRouter = require('./src/router/blog');
 const handleUserRouter = require('./src/router/user');
 const querystring = require('querystring');
 
-
-
-
-
 // 处理post data
 const getPostData = (req, res) => {
   const promise = new Promise((resolve, reject) => {
@@ -36,7 +32,6 @@ const getPostData = (req, res) => {
 }
 
 const serverHandle = (req, res) => {
-
   // 设置返回json
   res.setHeader('Content-type', 'application/json');
 
@@ -50,7 +45,7 @@ const serverHandle = (req, res) => {
    */
   req.cookie = {}
   const cookieStr = req.headers.cookie || "" // k1=v1;k2=v2;k3=v3
-  console.log(cookieStr, 'cookietst')
+  // console.log(cookieStr, 'cookietst')
   cookieStr.split(';').forEach(item => {
     if (!item) return;
     const arr = item.split('=')
@@ -58,7 +53,7 @@ const serverHandle = (req, res) => {
     const val = arr[1].trim()
     req.cookie[key] = val;
   })
-  console.log('req.cookie:', req.cookie)
+  // console.log('req.cookie:', req.cookie)
 
   // 处理post data
   getPostData(req).then(postData => {
@@ -75,6 +70,7 @@ const serverHandle = (req, res) => {
         }
         // 注意return放置的位置
         return // 不让代码继续运行
+        console.log('1')
       })
     }
 
@@ -86,7 +82,7 @@ const serverHandle = (req, res) => {
             JSON.stringify(data)
           )
         }
-        return
+        return;
       })
     }
 

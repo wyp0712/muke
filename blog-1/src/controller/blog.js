@@ -18,10 +18,12 @@ const getList = (author, keyword) => {
 
 // 详情
 const getDetail = (id) => {
-  const sql = `select * from blogs where id=${id}`
-  return exec(sql).then(rows => {
-    return rows[0]
-  })
+  // if(id) {
+    const sql = `select * from blogs where id=${id}`
+    return exec(sql).then(rows => {
+      return rows[0]
+    })
+  // }
 }
 
 // new Blog

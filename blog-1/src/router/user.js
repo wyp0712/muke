@@ -8,7 +8,6 @@ handerUserRouter = (req, res) => {
   const path = url.split('?')[0];
   
   if (method == 'GET' && path === '/api/user/login') {
-    // const { username, password } = req.body
     const { username, password } = req.query
     const loginData = login(username, password)
     return loginData.then(data => {
@@ -26,14 +25,15 @@ handerUserRouter = (req, res) => {
     })
   }
 
-  // 测试
-  // if (method == 'GET' && path === '/api/user/login-test') {
-  //   if (req.cookie.username) {
-  //     return Promise.resolve(new SuccessModel('登陆成功'))
-  //   }
-  //   return Promise.resolve(new ErrorModel('登陆博客失败'))
-  // }
-
+  /**
+   * @fun [测试]
+   */
+  if (method == 'GET' && path === '/api/user/login-test') {
+    if (req.cookie.username) {
+      return Promise.resolve(new SuccessModel('登陆成功'))
+    }
+    return Promise.resolve(new ErrorModel('登陆博客失败'))
+  }
 }
 
 module.exports = handerUserRouter

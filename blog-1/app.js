@@ -53,16 +53,16 @@ const serverHandle = (req, res) => {
     const val = arr[1].trim()
     req.cookie[key] = val;
   })
-  // console.log('req.cookie:', req.cookie)
+  console.log('req.cookie:', req.cookie)
 
   // 处理post data
   getPostData(req).then(postData => {
     // 将解析后的参数赋值给req.body;
 
     req.body = postData
-    // 处理blog路由
 
-    const resultBlog = handleBlogRouter(req, res)
+    // 处理blog路由
+    const resultBlog = handleBlogRouter(req, res);
     if (resultBlog) {
       return resultBlog.then(blogData => {
         if (blogData) {
@@ -74,6 +74,7 @@ const serverHandle = (req, res) => {
       })
     }
 
+    // 处理user路由
     const userData = handleUserRouter(req, res);
     if (userData) {
       return userData.then(data => {
@@ -94,15 +95,3 @@ const serverHandle = (req, res) => {
 }
 
 module.exports = serverHandle
-
-
-
-  // const resData = {
-  //   name: "devin",
-  //   site: 'ddd',
-  //   env: process.env.NODE_ENV
-  // }
-
-  // res.end(
-  //   JSON.stringify(resData)
-  // )

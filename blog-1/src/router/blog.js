@@ -31,10 +31,14 @@ const handerBlogRouter = (req, res) => {
   // 获取博客详情
   if (method == 'GET' && path === '/api/blog/detail') {
     const id = req.query.id
-    const getDetailData = getDetail(id)
-    return getDetailData.then(data => {
-      return new SuccessModel(data)
-    })
+    if (id) {
+      const getDetailData = getDetail(id)
+      return getDetailData.then(data => {
+        return new SuccessModel(data)
+      })
+    } else {
+      return Promise.resolve(new SuccessModel('参数有误，id 你带了吗'))
+    }
   }
 
   // 新建博客
@@ -65,7 +69,7 @@ const handerBlogRouter = (req, res) => {
     const res = deleteBlog(id, author)
      return res.then(delState => {
       if (delState) {
-        return new SuccessModel()
+        return new SuccessModel('删除成功')
       } else {
         return new ErrorModel('删除博客失败')
       }

@@ -36,7 +36,7 @@ handerUserRouter = (req, res) => {
    * @fun [测试]
    */
   if (method == 'GET' && path === '/api/user/login-test') {
-    if (req.session.username) {
+    if (req.session) {
       return Promise.resolve(new SuccessModel({
         session: req.session
       }))

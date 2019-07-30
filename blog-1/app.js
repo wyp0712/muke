@@ -2,6 +2,18 @@ const handleBlogRouter = require('./src/router/blog');
 const handleUserRouter = require('./src/router/user');
 const querystring = require('querystring');
 
+
+// 获取cookie过期时间
+const getCookietExpires = () => {
+  const d = new Date()
+  d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+  console.log('d.toGMTString():', d.toGMTString())
+  return d.toGMTString();
+}
+
+// session 数据
+const SESSION_DATA = {}
+
 // 处理post data
 const getPostData = (req, res) => {
   const promise = new Promise((resolve, reject) => {
@@ -49,11 +61,24 @@ const serverHandle = (req, res) => {
   cookieStr.split(';').forEach(item => {
     if (!item) return;
     const arr = item.split('=')
-    const key = arr[0].trim()
+    const key = arr[0].trim() // 防止前端修改cookie
     const val = arr[1].trim()
     req.cookie[key] = val;
   })
   console.log('req.cookie:', req.cookie)
+  // 解析session
+  let needSetCookie = false;
+  let userId = req.cookie.userid
+  if (userId) {
+    if (!SESSION_DATA[userId]) {
+      SESSION_DATA[userId] = {}
+    }
+  } else {
+    needSetCookie = true;
+    // 如果没有给他一个随机的当前时间戳
+    userId = `${Date.now()}_${Math.random()}`
+  }
+  req.session = SESSION_DATA[userId]
 
   // 处理post data
   getPostData(req).then(postData => {
@@ -65,7 +90,11 @@ const serverHandle = (req, res) => {
     const resultBlog = handleBlogRouter(req, res);
     if (resultBlog) {
       return resultBlog.then(blogData => {
+        if (needSetCookie) {
+          res.setHeader('Set-Cookie', `userid=${userId}; path=/; httpOnly; expires= ${getCookietExpires()}`)
+        }
         if (blogData) {
+
           res.end(JSON.stringify(blogData))
         }
         // 注意return放置的位置
@@ -78,6 +107,9 @@ const serverHandle = (req, res) => {
     const userData = handleUserRouter(req, res);
     if (userData) {
       return userData.then(data => {
+        if (needSetCookie) {
+          res.setHeader('Set-Cookie', `userid=${userId}; path=/; httpOnly; expires= ${getCookietExpires()}`)
+        }
         if (data) {
           res.end(
             JSON.stringify(data)

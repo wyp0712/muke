@@ -15,7 +15,6 @@ function exec(sql) {
          reject(new Error(err))
          return
        }
-      //  console.log(data, 'mysql===')
        resolve(data)
     })
   })

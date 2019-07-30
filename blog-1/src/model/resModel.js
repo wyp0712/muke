@@ -2,7 +2,9 @@
  *Creates an instance of baseModel.
  * @param {*} data {}
  * @param {*} message  消息
- * @memberof baseModel
+ * @memberof baseModel 
+ * @memberof SuccessModel
+ * @memberof ErrorModel
  */
 class baseModel {
   constructor(data, message) {
@@ -19,7 +21,6 @@ class baseModel {
     }
   }
 }
-
 
 class SuccessModel extends baseModel {
   constructor(data, message) {

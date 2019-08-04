@@ -2,6 +2,8 @@
 const { login } = require('../controller/user')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 
+const  { set } = require('../db/redis')
+
 // 同域名 cookie可以共享
 
 
@@ -11,8 +13,9 @@ handerUserRouter = (req, res) => {
   const url = req.url;
   const path = url.split('?')[0];
   
-  if (method == 'GET' && path === '/api/user/login') {
-    const { username, password } = req.query
+  if (method == 'POST' && path === '/api/user/login') {
+    // const { username, password } = req.query
+    const { username, password } = req.body
     const loginData = login(username, password)
     return loginData.then(data => {
        if (data.username) {
@@ -23,6 +26,8 @@ handerUserRouter = (req, res) => {
          // 设置session
          req.session.username = data.username
          req.session.realname = data.realname
+
+         set(req.sessionId, req.session)
 
          console.log(req.session, 'session')
         return new SuccessModel('登陆成功')
@@ -35,14 +40,14 @@ handerUserRouter = (req, res) => {
   /**
    * @fun [测试]
    */
-  if (method == 'GET' && path === '/api/user/login-test') {
-    if (req.session) {
-      return Promise.resolve(new SuccessModel({
-        session: req.session
-      }))
-    }
-    return Promise.resolve(new ErrorModel('登陆博客失败'))
-  }
+  // if (method == 'GET' && path === '/api/user/login-test') {
+  //   if (req.session) {
+  //     return Promise.resolve(new SuccessModel({
+  //       session: req.session
+  //     }))
+  //   }
+  //   return Promise.resolve(new ErrorModel('登陆博客失败'))
+  // }
 }
 
 module.exports = handerUserRouter

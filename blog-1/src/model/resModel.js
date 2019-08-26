@@ -35,6 +35,7 @@ class ErrorModel extends baseModel {
     this.errno = -1;
   }
 }
+
 module.exports = {
   SuccessModel,
   ErrorModel

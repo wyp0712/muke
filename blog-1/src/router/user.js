@@ -2,38 +2,35 @@
 const { login } = require('../controller/user')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 
-const  { set } = require('../db/redis')
+const { set } = require('../db/redis')
 
 // 同域名 cookie可以共享
-
-
-
 handerUserRouter = (req, res) => {
   const method = req.method;
   const url = req.url;
   const path = url.split('?')[0];
-  
+
   if (method == 'POST' && path === '/api/user/login') {
     // const { username, password } = req.query
     const { username, password } = req.body
     const loginData = login(username, password)
     return loginData.then(data => {
-       if (data.username) {
-         /**
-          * @param[httpOnly]: 只允许服务端修改cookie
-          * @param[path:/]: 适用与所有的路由，根路由
-          **/
-         // 设置session
-         req.session.username = data.username
-         req.session.realname = data.realname
+      if (data.username) {
+        /**
+         * @param[httpOnly]: 只允许服务端修改cookie
+         * @param[path:/]: 适用与所有的路由，根路由
+         **/
+        // 设置session
+        req.session.username = data.username
+        req.session.realname = data.realname
 
-         set(req.sessionId, req.session)
+        set(req.sessionId, req.session)
 
-         console.log(req.session, 'session')
+        console.log(req.session, 'session')
         return new SuccessModel('登陆成功')
-       } else {
+      } else {
         return new ErrorModel('登陆博客失败')
-       }
+      }
     })
   }
 
